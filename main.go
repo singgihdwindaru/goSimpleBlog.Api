@@ -1,11 +1,18 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"os"
+
+	"github.com/singgihdwindaru/goSimpleBlog.Api/core/app"
+	_ "github.com/singgihdwindaru/goSimpleBlog.Api/core/app"
 )
 
 func main() {
-	router := gin.Default()
+	app := app.App{}
+	app.Initialize(
+		os.Getenv("APP_DB_USERNAME"),
+		os.Getenv("APP_DB_PASSWORD"),
+		os.Getenv("APP_DB_NAME"))
 
-	router.Run("localhost:8080")
+	app.Run(":8010")
 }

@@ -1,0 +1,109 @@
+swagger: "2.0"
+consumes:
+- application/json
+info:
+  title: Comment article
+  version: 1.0.0
+host: localhost:8010
+paths: 
+  /:
+    post:
+      tags:
+      - "comment"
+      description: Post comment
+      parameters:
+      - in: body
+        name: body
+        description: Post comment object that needs to be added to the article
+        required: true
+        schema:
+          allOf:
+            - $ref: "#/definitions/PostCommentReq"
+            - type: object
+              properties:
+                parent:
+                  type: integer
+                  default: 0 
+      responses:
+        '202':
+          description: Berhasil menerima komentar
+          schema:
+            $ref: "#/definitions/PostCommentRsp"
+  /article/{postname}:
+    get:
+      tags:
+      - "comment"
+      description: Get comments by postname
+      parameters: 
+      - name: postname
+        in: path
+        description: The article postname
+        type: string
+        required: true
+      responses:
+        "200":
+          description: "successful"
+          schema:
+            allOf:
+            - $ref: "#/definitions/PostCommentReq"
+              type: array
+            - type: object
+              properties:
+                guid:
+                  type: integer
+                  default: 0
+        "400":
+          description: "Invalid postname"
+        "404":
+          description: "Postname not found"
+  /{guid}:
+    get:
+      tags:
+      - "comment"
+      description: Get commentar by guid
+      parameters:
+        - name: guid
+          in: path
+          description: guid from jwt token
+          type: string
+          required: true
+      responses:
+        "200":
+          description: "successful"
+          schema:
+            allOf:
+            - $ref: "#/definitions/PostCommentReq"
+              type: array
+            - type: object
+              properties:
+                guid:
+                  type: integer
+                  default: 0
+definitions:
+  PostCommentRsp:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+  PostCommentReq:
+    type: object
+    required:
+      - firsname
+      - lastname
+      - commentar
+      - postname
+    properties:
+      firsname:
+        type: string
+      lastname:
+        type: string
+      commentar:
+        type: string
+      postname:
+        type: string
+produces:
+- application/json
+schemes:
+- http
